@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react';
 
 const StoneChallenge = lazy(() => import('../components/challenges/StoneChallenge'));
 const RevTokenChallenge = lazy(() => import('../components/challenges/RevTokenChallenge'));
+const URAChallenge = lazy(() => import('../components/challenges/UraChallenge'));
 
 
 interface ModalManagerProps {
@@ -17,6 +18,9 @@ const ModalManager: React.FC<ModalManagerProps> = ({ code }) => {
       break;
     case 'REV_TOKEN':
       ChallengeComponent = RevTokenChallenge;
+      break;
+    case 'URA':
+      ChallengeComponent = URAChallenge;
       break;
     default:
       return null;

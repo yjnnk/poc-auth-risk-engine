@@ -29,9 +29,10 @@ function App() {
         https
           .get('http://localhost:3000/api/error-417')
           .then((response: any) => {
-            // console.log('API response:', response);
+            console.log('API response:', response);
           })
           .catch((error: any) => {
+            console.log(error)
           });
       });
     }

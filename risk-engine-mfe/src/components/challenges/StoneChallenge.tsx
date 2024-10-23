@@ -5,13 +5,13 @@ import Modal from '../Modal';
 const StoneChallenge: React.FC = () => {
   return (
     <Modal>
-      <p>Please visit the following link to proceed:</p>
+      <p>Stone</p>
       <a
         href="https://example.com"
         target="_blank"
         rel="noopener noreferrer"
       >
-        Go to Verification
+        Vá ao site
       </a>
     </Modal>
   );

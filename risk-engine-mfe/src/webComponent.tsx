@@ -30,10 +30,8 @@ class RiskMFE extends HTMLElement {
   }
 
   method1(body: any) {
-    console.log('method1');
     if (this.appRef.current && this.appRef.current.updateBody) {
-      console.log('appRef?');
-      console.log(this.appRef.current);
+ 
       this.appRef.current.updateBody(body);
     } else {
       console.log('appRef.current is undefined');

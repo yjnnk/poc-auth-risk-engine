@@ -27,7 +27,7 @@ function App() {
        setMethod1Callback(method1);
 
         https
-          .get('http://localhost:3000/api/error-417')
+          .get('http://localhost:3000/api/some-bff')
           .then((response: any) => {
             console.log('API response:', response);
           })

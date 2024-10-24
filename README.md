@@ -1,10 +1,14 @@
 para rodar:
-pre-req, uma api ou mock 
-0. localhost:3000/api/error-417
-    a. deve retornar status code 417
+pre-req, uma api (na pasta api, após instalar deps, rodar "go run .") ou mock: 
+0. localhost:3000/api/some-bff
+    a. deve retornar status code 417 na primeira chamada
     b. body: {
         "challenge": "URA"
         }
+    c. nas outras chamadas, para simular usuário autenticado, retornar
+    d. body: {
+        data: "ok, autenticado, seu recurso bff"
+    }
 0.1. localhost:3000/api/check-authentication r
     a. body {
         "authenticatedByUser": boolean

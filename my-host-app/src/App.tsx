@@ -1,6 +1,7 @@
 // src/App.jsx
-import React, { useEffect, useRef } from 'react';
-import { https, setMethod1Callback } from './interceptor-library/index';
+import React, { useEffect, useRef, useState } from 'react';
+import { HttpClientService } from './interceptor-library/index';
+import axios from 'axios'
 
 declare global {
   namespace JSX {
@@ -10,32 +11,31 @@ declare global {
   }
 }
 
-
 function App() {
-
   const webComponentRef = useRef(null);
 
   useEffect(() => {
-    const webComponent = document.querySelector('risk-mfe') as any;
 
-    
-    if (webComponent) {
-      customElements.whenDefined('risk-mfe').then(() => {
-       
-        const method1 = webComponent.method1
-        
-       setMethod1Callback(method1);
+    customElements.whenDefined('risk-mfe').then(() => {
+      const webComponent = document.querySelector('risk-mfe') as any;
 
-        https
-          .get('http://localhost:3000/api/some-bff')
-          .then((response: any) => {
-            console.log('API response:', response);
-          })
-          .catch((error: any) => {
-            console.log(error)
-          });
+      const method1 = webComponent.method1
+
+      const client = new HttpClientService({ axios, methodCallback: method1 });
+
+      const http = client.createHttpInstance({
+        baseURL: "http://localhost:3000/"
       });
-    }
+
+      http
+      .get('/api/some-bff')
+      .then((response: any) => {
+        console.log('API response:', response);
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
+    });
   }, []);
 
   return (

@@ -1,25 +1,42 @@
 // interceptor-library/index.js
 
-import axios from 'axios';
+import  { AxiosStatic, CreateAxiosDefaults } from 'axios';
 
-let method1Callback: any;
-
-export function setMethod1Callback(callback: any) {
-  method1Callback = callback;
-  return method1Callback
+interface IHttpClientService {
+    axios: AxiosStatic
+    methodCallback: () => any
 }
 
-export const https = axios.create()
+export class HttpClientService {
+    axios: AxiosStatic
+    methodCallback!: any
+    constructor({axios, methodCallback}: IHttpClientService) {
+        this.axios = axios
+        this.methodCallback = methodCallback
+    }
 
-https.interceptors.response.use(
-    response => response,
-    error => {
-        
+    async mountInterceptors (error: any = {}) {
+       
         if (error.response && error.response.status === 417) {
-            if (method1Callback) {
-                method1Callback(error.response.data);
+            if (this.methodCallback) {
+                this.methodCallback(error.response.data);
             }
         }
-        return Promise.reject(error);
+
+    } 
+
+    createHttpInstance = (axiosConfig: CreateAxiosDefaults) => {
+        const https = this.axios.create(axiosConfig)
+
+        https.interceptors.request.use((config) => {
+            return config
+        })
+
+        https.interceptors.response.use(
+            (response) => response,
+            async (error) => this.mountInterceptors(error)
+        )
+
+        return https
     }
-);
+}

@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const URAChallenge: React.FC= () => {
   const [authenticated, setAuthenticated] = useState(false);
-console.log(authenticated)
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
 

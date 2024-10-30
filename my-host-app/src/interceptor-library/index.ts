@@ -4,22 +4,22 @@ import  { AxiosStatic, CreateAxiosDefaults } from 'axios';
 
 interface IHttpClientService {
     axios: AxiosStatic
-    methodCallback: () => any
+    challengeCodeFromRiskEngine: () => any
 }
 
 export class HttpClientService {
     axios: AxiosStatic
-    methodCallback!: any
-    constructor({axios, methodCallback}: IHttpClientService) {
+    challengeCodeFromRiskEngine!: any
+    constructor({axios, challengeCodeFromRiskEngine}: IHttpClientService) {
         this.axios = axios
-        this.methodCallback = methodCallback
+        this.challengeCodeFromRiskEngine = challengeCodeFromRiskEngine
     }
 
     async mountInterceptors (error: any = {}) {
        
         if (error.response && error.response.status === 417) {
-            if (this.methodCallback) {
-                this.methodCallback(error.response.data);
+            if (this.challengeCodeFromRiskEngine) {
+                this.challengeCodeFromRiskEngine(error.response.data);
             }
         }
 

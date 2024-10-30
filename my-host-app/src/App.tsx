@@ -21,7 +21,7 @@ function App() {
 
       const method1 = webComponent.method1
 
-      const client = new HttpClientService({ axios, methodCallback: method1 });
+      const client = new HttpClientService({ axios, challengeCodeFromRiskEngine: method1 });
 
       const http = client.createHttpInstance({
         baseURL: "http://localhost:3000/"

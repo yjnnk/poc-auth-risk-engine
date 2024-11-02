@@ -6,24 +6,17 @@ interface IHttpClientService {
 
 export class HttpClientService {
     axios: AxiosStatic;
-    // challengeCodeFromRiskEngine!: any;
     private isAuthenticated: boolean = false;
     private authPromise: Promise<void> | null = null;
     private authResolve: (() => void) | null = null;
 
     constructor({ axios }: IHttpClientService) {
         this.axios = axios;
-        // Assign window.method1 to challengeCodeFromRiskEngine
-        // this.challengeCodeFromRiskEngine = (window as any).method1;
-        // console.log(this.challengeCodeFromRiskEngine)
-
         this.initialize();
     }
 
     private async mountInterceptors(error: any = {}) {
         const config = error.config as AxiosRequestConfig & { _retry?: boolean };
-
-
         if (error.response && error.response.status === 417 && !config._retry) {
             config._retry = true;
 
@@ -38,6 +31,11 @@ export class HttpClientService {
             }
 
             await this.authPromise;
+
+            config.headers = {
+                ...config.headers,
+                'x-custom-header': 'false',
+            };
 
             return this.axios.request(config);
         }

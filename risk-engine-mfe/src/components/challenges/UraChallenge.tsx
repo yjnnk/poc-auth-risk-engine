@@ -15,6 +15,7 @@ const URAChallenge: React.FC= () => {
         if (response.data.authenticatedByUser === true) {
           setAuthenticated(true);
           clearInterval(intervalId);
+          window.dispatchEvent(new CustomEvent('user-authenticated', { detail: { authenticated: true } }));
         }
       } catch (error) {
         console.error('Error polling endpoint:', error);

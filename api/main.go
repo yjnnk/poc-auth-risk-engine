@@ -27,13 +27,18 @@ type ResponseFromBff struct {
 
 func main() {
 
-	// para simular a autenticação do usuário após 5 segundo no polling
 	serverStartTime = time.Now()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/check-authentication", checkAuthenticationHandler)
 	mux.HandleFunc("/api/some-bff", someBFFHandler)
 
-	handler := cors.Default().Handler(mux)
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{"*"},
+	})
+
+	handler := c.Handler(mux)
 
 	log.Println("servidor na porta 3000.")
 	err := http.ListenAndServe(":3000", handler)
@@ -44,8 +49,6 @@ func main() {
 }
 
 func checkAuthenticationHandler(w http.ResponseWriter, r *http.Request) {
-
-	w.Header().Set("Content-Type", "application/json")
 
 	elapsedTime := time.Since(serverStartTime)
 
@@ -73,11 +76,14 @@ func someBFFHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
+	riskHeader := r.Header.Get("x-custom-header")
+	isAuthorized := riskHeader == "true"
+
 	someBFFCallCount++
 
 	var response ResponseFromBff
 
-	if someBFFCallCount%2 == 1 {
+	if isAuthorized {
 		response = ResponseFromBff{Challenge: "URA"}
 		w.WriteHeader(http.StatusExpectationFailed)
 	} else {

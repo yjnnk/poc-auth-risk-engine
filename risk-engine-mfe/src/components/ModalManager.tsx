@@ -4,7 +4,6 @@ const StoneChallenge = lazy(() => import('../components/challenges/StoneChalleng
 const RevTokenChallenge = lazy(() => import('../components/challenges/RevTokenChallenge'));
 const URAChallenge = lazy(() => import('../components/challenges/UraChallenge'));
 
-
 interface ModalManagerProps {
   code: string;
 }
@@ -28,7 +27,8 @@ const ModalManager: React.FC<ModalManagerProps> = ({ code }) => {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <ChallengeComponent />
+      {/* Use uniqueKey to force remount */}
+      <ChallengeComponent/>
     </Suspense>
   );
 };

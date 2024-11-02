@@ -10,7 +10,11 @@ function App() {
 
   const callMe = () => {
       http
-      .get('/api/some-bff')
+      .get('/api/some-bff', {
+        headers: {
+          "x-custom-header": "true"
+        }
+      })
       .then((response: any) => {
         console.log('API response:', response);
       })

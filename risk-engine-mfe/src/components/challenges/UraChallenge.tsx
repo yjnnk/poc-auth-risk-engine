@@ -4,6 +4,8 @@ import axios from 'axios';
 
 const URAChallenge: React.FC= () => {
   const [authenticated, setAuthenticated] = useState(false);
+
+
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
 
@@ -16,6 +18,9 @@ const URAChallenge: React.FC= () => {
           setAuthenticated(true);
           clearInterval(intervalId);
           window.dispatchEvent(new CustomEvent('user-authenticated', { detail: { authenticated: true } }));
+        } else {
+          setAuthenticated(false);
+
         }
       } catch (error) {
         console.error('Error polling endpoint:', error);

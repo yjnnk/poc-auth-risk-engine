@@ -17,29 +17,48 @@ export class HttpClientService {
 
     private async mountInterceptors(error: any = {}) {
         const config = error.config as AxiosRequestConfig & { _retry?: boolean };
+    
+        // Handle only 417 errors and avoid multiple retries for the same request
         if (error.response && error.response.status === 417 && !config._retry) {
             config._retry = true;
-
+    
+            // Trigger Risk Engine challenge if available
             if (this.challengeCodeFromRiskEngine) {
                 this.challengeCodeFromRiskEngine(error.response.data);
             }
-
+    
+            // Check if already authenticated; if so, retry immediately
+            if (this.isAuthenticated) {
+                config.headers = {
+                    ...config.headers,
+                    'x-custom-header': 'false',
+                };
+                return this.axios.request(config);
+            }
+    
+            // Set up a new authPromise if it's null (first-time or after reset)
             if (!this.authPromise) {
                 this.authPromise = new Promise<void>((resolve) => {
                     this.authResolve = resolve;
                 });
             }
-
+    
+            // Wait for authentication to complete
             await this.authPromise;
-
+    
+            // Reset authPromise and authResolve for future retries
+            this.authPromise = null;
+            this.authResolve = null;
+    
+            // Update headers for the retry and send the request again
             config.headers = {
                 ...config.headers,
                 'x-custom-header': 'false',
             };
-
+    
             return this.axios.request(config);
         }
-
+    
         return Promise.reject(error);
     }
 

@@ -2,26 +2,27 @@ import { AxiosStatic, CreateAxiosDefaults, AxiosRequestConfig } from 'axios';
 
 interface IHttpClientService {
     axios: AxiosStatic;
-    challengeCodeFromRiskEngine: () => any;
 }
 
 export class HttpClientService {
     axios: AxiosStatic;
-    challengeCodeFromRiskEngine!: any;
-
+    // challengeCodeFromRiskEngine!: any;
     private isAuthenticated: boolean = false;
     private authPromise: Promise<void> | null = null;
     private authResolve: (() => void) | null = null;
 
-    constructor({ axios, challengeCodeFromRiskEngine }: IHttpClientService) {
+    constructor({ axios }: IHttpClientService) {
         this.axios = axios;
-        this.challengeCodeFromRiskEngine = challengeCodeFromRiskEngine;
+        // Assign window.method1 to challengeCodeFromRiskEngine
+        // this.challengeCodeFromRiskEngine = (window as any).method1;
+        // console.log(this.challengeCodeFromRiskEngine)
 
         this.initialize();
     }
 
     private async mountInterceptors(error: any = {}) {
         const config = error.config as AxiosRequestConfig & { _retry?: boolean };
+
 
         if (error.response && error.response.status === 417 && !config._retry) {
             config._retry = true;
@@ -75,4 +76,8 @@ export class HttpClientService {
             this.authPromise = null;
         }
     };
+
+    get challengeCodeFromRiskEngine() {
+        return (window as any).setChallegeOnRiskMFE;
+    }
 }

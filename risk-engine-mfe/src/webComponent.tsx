@@ -9,7 +9,8 @@ class RiskMFE extends HTMLElement {
 
   constructor() {
     super();
-    this.method1 = this.method1.bind(this);
+    this.setChallegeOnRiskMFE = this.setChallegeOnRiskMFE.bind(this);
+
     this.attachShadow({ mode: 'open' });
 
     // Initialize appRef
@@ -21,15 +22,22 @@ class RiskMFE extends HTMLElement {
     this.shadowRoot!.appendChild(mountPoint);
     this.root = ReactDOM.createRoot(mountPoint);
     this.root.render(<App ref={this.appRef} />);
+    (window as any).setChallegeOnRiskMFE = this.setChallegeOnRiskMFE;
+
   }
 
   disconnectedCallback() {
     if (this.root) {
       this.root.unmount();
     }
+
+    delete (window as any).method1
   }
 
-  method1(body: any) {
+
+  setChallegeOnRiskMFE(body: any) {
+    console.log('method1')
+
     if (this.appRef.current && this.appRef.current.selectChallenge) {
  
       this.appRef.current.selectChallenge(body);
